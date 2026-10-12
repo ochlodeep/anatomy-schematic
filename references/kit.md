@@ -2,6 +2,8 @@
 
 Everything is in `kit/iso-kit.ts`, with the same API in `kit/iso-kit.mjs`. World coordinates are `[x, y, z]`, with x and y on the floor and z up, in units of about 1 px. Screen coordinates are `[sx, sy]` in the SVG viewBox. Paths come back as SVG `d` strings, rounded to 0.1.
 
+The native-structure primitives (`datum`, `indexRuler`, `cell`, `cellGrid`, `columns`, `plateStack`, `node`, `edge`, `track`, `heightField`, `itemsInOrder`) live in `kit/schema.mjs` and have their own page: `references/schema.md`.
+
 ## Contents
 1. Types
 2. Camera
@@ -245,7 +247,7 @@ import { tubePieces, tubeSvg, runsOf, crossingsOf } from "../../kit/tube.mjs";
 
 The fills for `.tb-body`, `.tb-shine` and `.tb-shade` are part of `ISO_CSS` (and `kit/iso.css`), so `tubeSvg` works on any kit page with no extra CSS. Override them in page CSS only to restyle tubes, as the Raptor does for selected parts (`.it[data-on] .tb-body`).
 
-**Depth-sorting tubes.** A pipe runs between parts at many depths, so draw each piece at its own depth: put it in your item list with key `G.dot3(piece.mid, G.viewOf(P))`, next to the solids it passes. Use short pieces (`maxLength` 6–18) where a pipe weaves between neighbours, and long ones (400) for a ring that lies flat on the floor. To split a pipe between SVG layers, test `piece.mid`. The ripple tank's motor cable goes three ways: pieces over the bridge (`piece.mid[2] > Z.top - 1 && piece.mid[1] < IN.y + IN.d - 10`) to the front SVG before the bar, the rest above the rim to the front SVG after the near caps, and the run down the leg to the control box to the middle SVG. Its lamp cable sends the pieces that hang over the base edge (`piece.mid[1] < BASE.y - 0.2`) to the back SVG. In a figure as dense as the Raptor, don't tune these keys by eye: record the pieces and let `orderKeys` (section 12) settle them.
+**Depth-sorting tubes.** A pipe runs between parts at many depths, so draw each piece at its own depth: put it in your item list with key `G.dot3(piece.mid, G.viewOf(P))`, next to the solids it passes. Use short pieces (`maxLength` 6–18) where a pipe weaves between neighbours, and long ones (400) for a ring that lies flat on the floor. To split a pipe between SVG layers, test `piece.mid`. The ripple tank's motor cable goes three ways: pieces over the bridge (`piece.mid[2] > Z.top - 1 && piece.mid[1] < IN.y + IN.d - 10`) to the front SVG before the bar, the rest above the rim to the front SVG after the near caps, and the run down the leg to the control box to the middle SVG. Its lamp cable sends the pieces that hang over the base edge (`piece.mid[1] < BASE.y - 0.2`) to the back SVG. (The ripple tank is an Anatomy example, not shipped in this fork.) In a figure as dense as the Raptor, don't tune these keys by eye: record the pieces and let `orderKeys` (section 12) settle them.
 
 **Anything that wraps a pipe splits it.** A collar, band, bellows disc, clamp or valve body is wider than the pipe it sits on. If the pipe runs through it as one chunk, the chunk is both behind and in front of the collar and no key can order them: the collar either hides the pipe's near side or the pipe paints over the collar's face. Gap the pipe at the collar (`gaps: [[at - t/2, at + t/2]]`): the far piece ends at the collar's back face, the near piece starts at its front face, and both order cleanly. The Raptor's `pipe()` does this for its own end flanges, bands, bellows and valve, and `cable()` for the harness clamps via `crossingsOf`.
 

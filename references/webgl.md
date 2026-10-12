@@ -1,6 +1,8 @@
 # WebGL inside the drawing
 
-How to put a shader effect (fire, water, light, glow) inside an isometric figure so it reads as part of the same object, seen through the same camera. Two shipped examples do this: `examples/raptor-engine/` (a plume, shock, splash and steam under a rocket engine) and `examples/ripple-tank/` (caustics, shadows and a rippled water surface). Read their `live.js` next to this page.
+How to put a shader effect (fire, water, light, glow) inside an isometric figure so it reads as part of the same object, seen through the same camera. The shipped example is `examples/raptor-engine/` (a plume, shock, splash and steam under a rocket engine); read its `live.js` next to this page. Many rules below also cite Anatomy's ripple tank (caustics, shadows and a rippled water surface), which is not shipped in this fork; its lessons stand, and its source is in the upstream Anatomy repository.
+
+In a native-structure figure a shader is rare. It earns its place for what lines can't draw on the structure itself: heat or density spreading over a height field, a glow that fades along a conduit, light through a translucent layer. The rules are the same.
 
 The user loved the first shader figure, but noticed that the colour changed instantly between its phases, as if the effect had been cut. So the bar is: **nothing pops, nothing is cut, and everything sits in the drawing's perspective.** Every rule below came from a bug that broke that bar.
 
@@ -54,27 +56,14 @@ div         .rp-flash: a CSS radial gradient (closest-side) for the ignition fla
 ```
 The engine proxy is `engineR(z)`, a radius function of the bell, chamber and pumps. `inFront(p, V)` says whether sample `p` lies between the engine and the viewer. `side(front, veil)` sends the sample to one canvas or the other.
 
-### Worked case: the ripple tank
-```
-back SVG    base plate, feet, ruler, label plate, paper sheet with tape, lamp cable over the base edge, SVG fallback pattern
-canvas      .rt-paper-gl: lamp light on the paper and base, caustics, shadows of the legs, post, bridge, motor, control box and foam beach, refraction
-middle SVG  post, arm, lamp and its cables, control box, motor cable down the left leg in clips, legs with levelling screws,
-            far rails, three corner posts, far glass, foam beach, plain-water fill
-canvas      .rt-water-gl: window reflection and room-light glints, meniscus tilt at the walls, dipper contact rings,
-            the water band behind the near glass, glass tint, the lamp's beam (dark only)
-front SVG   far caps, motor cable over the bridge, far pillar and spring, bar, dippers, motor, near spring, near rails,
-            glass bottom, water lines, near glass, near caps, motor cable on the rim, near corner post, near pillar, beam
-```
-Two canvases sit at two depths because there are two effects at two heights: light on the paper (under the legs), and the water surface (inside the tank). The control box stands on the base beside the tank, below the water canvas, so it lives in the middle SVG; the near corner post is painted after the caps it stands on.
-
-CSS for the stack (adapted from `ripple.css`):
+CSS for the stack:
 ```css
 .fx-stage { position: relative; touch-action: pan-y; }
 .fx-stage > svg, .fx-stage > canvas { display: block; width: 100%; height: auto; }
 .fx-stage > .fx-layer { position: absolute; inset: 0; height: 100% !important; pointer-events: none; }
 .iso:not([data-theme="light"]) .fx-gl { mix-blend-mode: screen; }
 ```
-Screen blending can only brighten. A canvas that must also darken what it covers (the ripple tank's water, which tints the paper seen through it) stays on normal premultiplied blending in dark too: only `.rt-paper-gl` is screen-blended.
+Screen blending can only brighten. A canvas that must also darken what it covers (water that tints the paper seen through it) stays on normal premultiplied blending in dark too.
 If the front SVG must take hover (the Raptor's parts do), give it `pointer-events: none` and its items `pointer-events: visiblePainted`, so the canvas and empty areas never catch the pointer.
 
 ## 3. The camera contract

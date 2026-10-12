@@ -1,6 +1,6 @@
 # Craft
 
-How a figure comes to read as a crafted object rather than a diagram. Every rule here came from a figure that was rejected or approved by a demanding reviewer.
+How a figure comes to read as a crafted object rather than a diagram. Most rules here came from Anatomy figures that a demanding reviewer rejected or approved, and they hold unchanged for native structures; section 2 and the scaffolding vocabulary in section 3 say what changes when the subject is the concept's own structure rather than a machine.
 
 ## Contents
 1. What "crafted" means
@@ -19,8 +19,8 @@ How a figure comes to read as a crafted object rather than a diagram. Every rule
 
 The approved figures share five qualities.
 
-1. **A real object you could build.** The reader names it at a glance: a test rig, a dial indicator, a chest of drawers, a gantry plotter, a lock. It is invented for the subject, never traced from a reference.
-2. **Many small, precise parts.** A good inline figure has 30–60 solids and 300–500 paths. A hero subject that really has more parts can carry far more: the desk computer has about 85 solids, and the Raptor about 270 solids in 478 depth-sorted items. Every part rests on another part, aligns to its neighbours and has a job. Density comes from structure (feet, rails, stops, bushings, knobs), not from texture.
+1. **A real structure you could build.** The reader names the concept at a glance: a matrix, a tree, a population, an attention head. Every element is there at its true count and proportion, seated on scaffolding, as if machined and assembled. (In Anatomy this is a real machine invented for the subject; the standard of build quality is the same.)
+2. **Many small, precise parts.** A good inline figure has 30–60 solids and 300–500 paths. A hero subject that really has more parts can carry far more: the attention figure has 150 solids and 6 conduits in 162 depth-sorted items, and the Raptor about 270 solids in 478. Every part rests on another part, aligns to its neighbours and has a job. Density comes from structure (the concept's elements, then trays, rulers, tracks, ports, feet), not from texture.
 3. **Volume.** Parts have real thickness, sides shaded in four tones, lighter tops, bevels that catch light, and a soft halo underneath.
 4. **Calm.** Thin 0.6 px lines and a restrained palette. One lit accent tells the eye where to look. Motion is eased and slow enough to follow.
 5. **Truth.** The readout shows live, correct numbers, and the motion follows the real model: springs with real stiffness, true sizes and thresholds.
@@ -29,14 +29,15 @@ The approved figures share five qualities.
 
 Reviewers rejected each of these, so don't do them:
 
-- **Abstract stacks.** Floating plates, slabs or tiles standing for "layers" are too abstract to read as anything. If you need layers, make them drawers, trays in a rack, plates on guide pillars, or cards in a holder.
+- **Inexact abstraction.** Floating plates, slabs or tiles standing for "layers", "some cubes" for a tensor whose shape is known, grids that don't line up with their rulers, heights with no scale, and a matrix drawn with the wrong shape. Abstract forms are allowed only when they are exact: every element present at its true count, one height scale per kind of value, shared indices on a shared axis, and everything seated (cells on trays, layers on pillars, grids on a datum). If a layer has no true element count, it isn't a native structure; draw it as Anatomy would, as drawers, trays in a rack or plates on guide pillars.
 - **One big plain slab.** A large surface with a few lines is too flat and bland. Break it into a base, a carriage and parts; add a groove, screws, a ruler and a label plate.
 - **Blueprint furniture.** Leader lines, balloons with numbers, dimension arrows, hatching, dashed hidden edges and floating labels belong in the legend and caption, not the drawing.
 - **Lines that stop in mid-air.** Guide fans, connectors that end short of a part, or a crease that stops before the silhouette corner. Every line must land on something.
 - **Wireframes.** See-through boxes where the back edges show.
 - **Colour everywhere.** Keep it monochrome unless colour is the subject: one lit accent plus true RGB only for colour channels. A fluid is not colour by default: oil in a sight glass, water in a tank and coolant in a pipe are tints of the figure's own inks, and the `--no-webgl` fallback draws the same tint the shader does. A blind-test bench painted its oil saturated orange in an otherwise grey figure, and its fallback oil was grey.
-- **Text in the drawing.** Allow at most one tiny engraved label (`FaceText` on a face). Everything else goes in the card corners, legend or caption.
-- **Copying a reference.** Take mood and finish from a reference, then invent the object.
+- **Text in the drawing.** Allow at most one tiny engraved label (`FaceText` on a face), plus numerals engraved on cell tops where the value itself is the subject (`cell({ label })`, sparingly, fitted to the face). Names, axes and units go in the card corners, legend or caption.
+- **Copying a reference.** Take mood and finish from a reference, then build the structure from the model.
+- **Arrows for flow.** An arrow is a label in disguise. Show flow with a token moving along a conduit, a carriage moving along a track, or cells sinking and rising in place.
 - **Raw pointer jumps.** Parts that snap to the cursor. Ease everything.
 - **Pipes through pipes.** On the first Raptor the owner zoomed in and found cables and lines passing through the main ducts and through each other, "which makes no sense". At 1× it looked fine. Every pipe and cable keeps clear of everything but its own connection, every crossing is drawn in true depth order, and `kit/audit.mjs` proves both (section 8, "Clearance and crossings").
 - **Textures that stop.** On the same close-up, rows of bolt dots on the chamber stopped dead in the middle of the surface, and the bell and throat were shaded as a staircase of flat tone blocks. Both read as broken. The owner's words: if a texture has to end, "we'd rather fade them out at the end than an instant stop". Shade curved surfaces smoothly, and make a texture end on a real edge or fade out (section 8, "Shading and textures on curved surfaces").
@@ -48,7 +49,21 @@ Reviewers rejected each of these, so don't do them:
 
 ## 3. Parts vocabulary, with recipes
 
-`P` is the projection and `k` is the kit, as in `import * as k from "./iso-kit"`. Heights are in world units, with z up. Draw each recipe's solids in the order listed.
+### Scaffolding for native structures
+The native structure gets its density from what holds it, the way a machine gets it from feet, rails and bushings. Each of these is in `kit/schema.mjs` (`references/schema.md`) or is a two-line slab:
+- **Datum plate** (`datum`): the stage, on four feet, with a groove inset 5 from the edge and screws at the corners. Every structure stands on it.
+- **Index rulers** (`indexRuler`): a strip along a grid's edge with one tick under each element's centre and a major every 5th. Give each indexed axis one, and let structures that share an index share the ruler.
+- **Trays**: a `lo` slab 1–2 thick, 2–4 larger than the grid or row it carries, with a screw dot at each end. A row that is one record (an individual, a token, a bucket) gets its own tray.
+- **Plinths**: a `mid` slab 3–5 tall under a reference value (a target, a ground truth, a bias), so it reads as set apart from the working data.
+- **Tracks** (`track`): a rail with a tick per step and end stops, under anything that moves along an index: a selector carriage, a probing token, a kernel.
+- **Ports**: a small slab on a tray's edge whose face a conduit ends on, one per conduit.
+- **Pillars** (`plateStack`): what a lifted layer stands on. Nothing floats.
+- **Sockets**: a flat `lo` cell 0.6 tall for every slot that is still empty (a generation not yet run, a bucket with no key), so an empty region is still counted structure.
+- **Pins and columns**: a cylinder for a scalar that belongs to a row (its loss, its score), so it reads apart from the row's cubes.
+
+### Machine parts
+
+These recipes come from Anatomy. Use them for scaffolding (a carriage on a track is "Rails, end stops and a carriage", a datum is "Base plate on feet") and for any physical part a structure needs. `P` is the projection and `k` is the kit, as in `import * as k from "./iso-kit"`. Heights are in world units, with z up. Draw each recipe's solids in the order listed.
 
 ### Base plate on feet
 ```js
@@ -314,7 +329,7 @@ An exploded view earns its place when the parts are the explanation (what feeds 
 - Springs, staggering and per-frame depth re-sorting are in `references/motion.md`.
 
 ## 10. Screens and things on faces
-A screen, a dial face or a display is drawn in the plane of the face it sits on (`examples/desk-computer/`):
+A screen, a dial face or a display is drawn in the plane of the face it sits on (Anatomy's `desk-computer` example does this for a CRT; `examples/dial-indicator/` engraves a dial face with `topMatrix`):
 - **The face plane.** `sideMatrix([0, y], 0, P, "left")` maps a group's local `(x, −z)` coordinates onto the vertical face at `y`. Draw everything on the screen (the glow, scanlines, a mark, `<text>` and a cursor) in those flat coordinates inside that `<g transform>`.
 - **A recess.** Clip the screen to its rounded outline with a `clipPath` in the same plane, and draw the recess's inner sides as quads between the face and the face moved `depth` back. Shade the sides by facing (tops `iso-top`, sides by shade). Draw the outline `lo` on the face and `faint` at the back.
 - **Motion on the face** is a transform in face coordinates. The CRT power-off scales the picture about the screen centre to a line, then to a dot, with a beam line and a fading dot.

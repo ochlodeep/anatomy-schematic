@@ -32,20 +32,15 @@ jobs:
           node examples/dial-indicator/build.mjs
           node examples/dial-indicator/build.mjs --light
 
-      - name: Desk computer
+      - name: GA population
         run: |
-          node examples/desk-computer/build.mjs
-          node examples/desk-computer/build.mjs --light
+          node examples/ga-population/build.mjs
+          node examples/ga-population/build.mjs --light
 
-      - name: Arcade cabinet
+      - name: Attention
         run: |
-          node examples/arcade-cabinet/build.mjs
-          node examples/arcade-cabinet/build.mjs --light
-
-      - name: Ripple tank
-        run: |
-          node examples/ripple-tank/build.mjs
-          node examples/ripple-tank/build.mjs --light
+          node examples/attention/build.mjs --audit
+          node examples/attention/build.mjs --light
 
       - name: Turning dial
         run: |

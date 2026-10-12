@@ -14,7 +14,8 @@ Tick what applies, and say why for anything left unticked.
 - [ ] No comments in code.
 - [ ] Kit changes are opt-in, and every existing example is byte-identical (or this PR says which pages change and why).
 - [ ] I built and looked at both themes.
-- [ ] Figures with pipes, cables or round parts: `node build.mjs --audit` ends `audit passed`, every failing line at 0.
+- [ ] Figures with conduits, pipes, cables or round parts: `node build.mjs --audit` ends `audit passed`, every failing line at 0.
+- [ ] Native figures: every element is drawn at its true count, checked against the model.
 - [ ] `node scripts/lines.mjs` prints `line ends: 0` on both themes and in every resting pose.
 - [ ] Shaders: a slowed contact sheet across every transition shows no pop, and `--no-webgl` still reads.
 - [ ] 3D: a full run ends `turn audit passed`, and `scripts/turn-check.mjs` passes.

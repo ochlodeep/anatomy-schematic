@@ -1,6 +1,6 @@
-# Contributing to Anatomy
+# Contributing to Schematic
 
-Thank you for helping. Anatomy is judged by how its figures look at 4× zoom, so most of this guide is about checking your work before anyone else does.
+Thank you for helping. Schematic is judged by how exact its figures are and how they look at 4× zoom, so most of this guide is about checking your work before anyone else does.
 
 By taking part you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
@@ -13,24 +13,24 @@ You need:
 - **Claude Code**, OpenCode or Codex, to try the skill itself.
 
 ```sh
-git clone https://github.com/wheresryan22/anatomy.git
-cd anatomy
+git clone https://github.com/ochlodeep/anatomy-schematic.git
+cd anatomy-schematic
 ```
 
 To use your working copy as the skill while you change it, link it into your personal skills folder (move any installed copy out of the way first):
 
 ```sh
-ln -s "$PWD" ~/.claude/skills/anatomy
+ln -s "$PWD" ~/.claude/skills/schematic
 ```
 
 For OpenCode, or for Codex:
 
 ```sh
-ln -s "$PWD" ~/.config/opencode/skills/anatomy
+ln -s "$PWD" ~/.config/opencode/skills/schematic
 ```
 
 ```sh
-ln -s "$PWD" ~/.agents/skills/anatomy
+ln -s "$PWD" ~/.agents/skills/schematic
 ```
 
 ## Building the examples
@@ -38,14 +38,12 @@ ln -s "$PWD" ~/.agents/skills/anatomy
 Each framework-free example is one script that writes standalone pages next to itself. The built pages are committed.
 
 ```sh
+node examples/ga-population/build.mjs
+node examples/ga-population/build.mjs --light
+node examples/attention/build.mjs
+node examples/attention/build.mjs --light
 node examples/dial-indicator/build.mjs
 node examples/dial-indicator/build.mjs --light
-node examples/desk-computer/build.mjs
-node examples/desk-computer/build.mjs --light
-node examples/arcade-cabinet/build.mjs
-node examples/arcade-cabinet/build.mjs --light
-node examples/ripple-tank/build.mjs
-node examples/ripple-tank/build.mjs --light
 node examples/raptor-engine/build.mjs
 node examples/raptor-engine/build.mjs --light
 node examples/turning-dial/build.mjs
@@ -54,7 +52,7 @@ node examples/turning-dial/build.mjs --light --verify
 node examples/turning-dial/stress.mjs --light
 ```
 
-The Raptor builds take a few minutes each; the rest take seconds. `examples/test-rig/` and `examples/spot-plate/` are React components with no build script.
+The Raptor builds take a few minutes each; the rest take seconds. `examples/test-rig/` is a React component with no build script. `dial-indicator`, `raptor-engine`, `test-rig` and `turning-dial` are kit references kept from Anatomy; keep them byte-identical unless a kit fix is meant to change them.
 
 After a build, `git status --short` must show nothing unless you meant to change a figure. CI runs exactly these commands and then `git diff --exit-code`.
 
@@ -68,26 +66,34 @@ Run the ones that match what you touched, and read every PNG they write: open it
 node --test scripts/drive.test.mjs
 ```
 
-**Geometry audit.** For figures with pipes, cables or round parts. It must end `audit passed`, with every failing line at 0.
+**Schema primitives.** When changing `kit/schema.mjs` or `scripts/inline-kit.mjs`:
 
 ```sh
+node --test scripts/schema.test.mjs
+```
+
+**Geometry audit.** For figures with conduits, pipes, cables or round parts. It must end `audit passed`, with every failing line at 0.
+
+```sh
+node examples/attention/build.mjs --audit
 node examples/raptor-engine/build.mjs --audit
 ```
 
 **Line ends.** Every seam, rib, tick and pointer must end on a stroke, a dot or an outline. It must print `line ends: 0`; `--out` rings the failures.
 
 ```sh
-node scripts/lines.mjs examples/dial-indicator/dial-indicator-light.html --out shots/lines-light.png
-node scripts/lines.mjs examples/dial-indicator/dial-indicator.html --out shots/lines.png
+node scripts/lines.mjs examples/ga-population/ga-population-light.html --out shots/lines-light.png
+node scripts/lines.mjs examples/ga-population/ga-population.html --out shots/lines.png
 ```
 
 **Capture.** Stills, phone width, hover, keys and 4× close-ups, with WebGL on.
 
 ```sh
-node scripts/capture.mjs examples/ripple-tank/ripple-tank-light.html --out shots/desk.png
-node scripts/capture.mjs examples/ripple-tank/ripple-tank-light.html --out shots/phone.png --width 390
-node scripts/capture.mjs examples/ripple-tank/ripple-tank-light.html --out shots/joint.png --zoom 200,80,220,170
-node scripts/capture.mjs examples/ripple-tank/ripple-tank-light.html --out shots/still.png --reduced
+node scripts/capture.mjs examples/attention/attention-light.html --out shots/desk.png
+node scripts/capture.mjs examples/attention/attention-light.html --out shots/phone.png --width 390
+node scripts/capture.mjs examples/attention/attention-light.html --out shots/joint.png --zoom 280,180,200,140
+node scripts/capture.mjs examples/ga-population/ga-population-light.html --out shots/motion.png --times 1200,2400
+node scripts/capture.mjs examples/attention/attention-light.html --out shots/still.png --reduced
 ```
 
 **Drive.** Scripted sessions: move, click, key, wait for a phase, and contact sheets slowed down to catch pops in a shader. `--no-webgl` checks the SVG fallback.
@@ -135,12 +141,12 @@ These come from [`SKILL.md`](SKILL.md) and [`references/`](references). A pull r
 - **No overlaps.** No pipe or cable passes through anything, at rest, apart or in any frame of a motion. Every crossing is drawn in true depth order, proved by the audit, never tuned by eye. Fix an interlock in the geometry, never with a key bias, and record the true shape of what you draw: a stand-in shape that quiets the audit is a bug.
 - **Lines resolve and textures fade.** Every line ends on something. A rib row, bolt circle, seam or rule line ends on a real edge or fades out; it never stops in the middle of a surface. Curved surfaces shade smoothly, with no tone staircase.
 - **Shaders never pop.** Every uniform rides an envelope with an attack and a decay, a phase change is a crossfade, and every term reaches zero before any bound or canvas edge. The effect lives in world space in the figure's own camera, and the SVG still reads without WebGL.
-- **Every number is true.** The readout, the motion and the caption come from one model with the real numbers. Docs follow the same rule: never write a number or a feature you have not checked.
+- **Every number is true, and every element is counted.** The readout, the motion, the caption and the shape of every structure come from one model with the real numbers; a native figure draws every element at its true count. Docs follow the same rule: never write a number or a feature you have not checked.
 - **Read every PNG.** Look at 4× close-ups of every joint in both themes before you ask for a review.
 
 ## Changing the skill's text
 
-`SKILL.md` and `references/` are instructions Claude follows, so keep them short, exact and in the same plain voice. When you change a kit API, update [`references/kit.md`](references/kit.md) in the same pull request. When you add an example, give it a folder under `examples/` with a `build.mjs` that writes `<name>.html` and, with `--light`, `<name>-light.html`; add it to the list in `SKILL.md`, the table in the README and the build list in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+`SKILL.md` and `references/` are instructions Claude follows, so keep them short, exact and in the same plain voice. When you change a kit API, update [`references/kit.md`](references/kit.md) (or [`references/schema.md`](references/schema.md) for `kit/schema.mjs`) in the same pull request. A new concept-to-form mapping goes in [`references/idiom.md`](references/idiom.md). When you add an example, give it a folder under `examples/` with a `build.mjs` that writes `<name>.html` and, with `--light`, `<name>-light.html`; add it to the list in `SKILL.md`, the table in the README and the build list in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Pull requests
 
@@ -156,4 +162,4 @@ CI must pass before a merge.
 
 ## Reporting a bug or asking for a figure
 
-Use the [issue forms](https://github.com/wheresryan22/anatomy/issues/new/choose). For a figure that came out wrong, include the prompt, the theme, where the figure lives (HTML, SVG or React), and a screenshot or close-up of the fault.
+Use the [issue forms](https://github.com/ochlodeep/anatomy-schematic/issues/new/choose). A fault in the shared kit or checks may also belong upstream in [Anatomy](https://github.com/wheresryan22/anatomy). For a figure that came out wrong, include the prompt, the theme, where the figure lives (HTML, SVG or React), and a screenshot or close-up of the fault.

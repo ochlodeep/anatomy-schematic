@@ -76,6 +76,14 @@ export function RigLive(props: { base: React.ReactNode; carriage: React.ReactNod
 ```
 `examples/test-rig/live.tsx` is the full production version, with springs, a tour, press and pull, keyboard handling and aria.
 
+## Operations on a structure
+A native figure moves by running its algorithm on itself, in phases, never by morphing everything at once:
+- **Phases on one clock.** Give a step a length (3–4 s) and each phase a window of it, eased with smoothstep: `ease((clock / LENGTH - a) / (b - a))`. `examples/ga-population/` sinks the culled rows in 0.25–0.5 of the step and raises the children in 0.55–0.9, so the reader sees what left before seeing what arrived.
+- **Sink and rise in place.** An element that leaves shrinks to a 0.6-tall socket in its slot, and the new one rises out of the same socket. Elements never slide through each other; when they must change places, give them separate lanes (a lowered track), as a sort would.
+- **Rebuild only what changes.** Keep the static scaffolding as built SVG and rebuild the changing cells into one group per frame from a pose (`cellsOf(pose)` with `schemaScript()` inlined), only while a transition runs.
+- **Emphasis is an attribute.** To light a different row, set `data-lit` on its `.iso-solid` groups and `data-tone` on its conduit's `.tb-edge` paths; nothing is rebuilt (`examples/attention/`). Pair the switch with something that moves smoothly (a carriage gliding to the selected index) so the change reads as caused.
+- **The tour runs the algorithm.** The idle tour steps the real model (the next generation, the next query); a pointer or key holds the tour for about 4 s, then it resumes. Under reduced motion every step jumps to its end state and the tour doesn't run.
+
 ## Shapes that change
 When a part changes shape rather than position (a swelling capsule, a compressing spring, a needle turning), rebuild only its paths each frame with the kit, using `slabOf`, `coil` or `lineOnTop`, and write them to its paths: `fill`, `shades[0..3]`, `top`, `crease`, `bevel`, `outline`. One solid costs well under 0.1 ms. Measure it: a frame should stay under about 1 ms of script.
 - **Precomputed frames step.** A lever drawn from 41 prebuilt frames over ±15° moved its knob about 0.8 px per frame, visible in slow motion. Rebuild a rotating part each frame, or precompute enough frames that one step moves nothing more than 0.25 px.
@@ -98,7 +106,7 @@ For a value that should arrive without overshoot (a hue, a brightness, a lamp, a
 ```js
 const moving = settle(freq, state.tf, dt, 0.625, calm);
 ```
-The ripple tank runs its frequency (0.625 s) and dipper spacing (0.4 s) through `settle`, so a key press or a pointer move never jumps the wavelength.
+Anatomy's ripple tank ran its frequency (0.625 s) and dipper spacing (0.4 s) through `settle`, so a key press or a pointer move never jumped the wavelength.
 - **Separate what a phase changes.** When one physical quantity (say chamber pressure) drives colour, shape and brightness, a fast spring on that quantity makes all three jump at once. Give colour its own slower `settle` (0.3–1 s), and compute brightness so it moves one way through the change.
 - **A fade-out only gets darker.** When a stop begins, freeze the brightness at its current level and scale it only by quantities that fall.
 - **Changing a spring changes its neighbours.** Damping one spring critically slows every phase that relied on its old overshoot, so recheck all of them.
@@ -152,7 +160,7 @@ Never run the action on a half-exploded machine, and never snap the parts home t
 ## Taking over from the tour
 When the user acts during the idle tour, stop the tour and leave the state where it is. If your take-over helper resets something (for example, it forces the power on), and the user's action is itself a toggle of that thing, the two cancel out in the same frame and replay an animation. Pass the helper a flag (`takeOver(switching)`), and test every toggle in every phase of the tour, not only the default one.
 
-A step key pressed during the tour must step from the value the reader sees, not from the tour's target, which may be far ahead. The ripple tank's keys start from `freq.x` and `gap.x` while touring (`state.tf` and `state.td` otherwise), and `steer()` zeroes both springs' velocity when it takes over, so the value only moves in the key's direction.
+A step key pressed during the tour must step from the value the reader sees, not from the tour's target, which may be far ahead. Anatomy's ripple tank started its keys from `freq.x` and `gap.x` while touring (`state.tf` and `state.td` otherwise), and `steer()` zeroes both springs' velocity when it takes over, so the value only moves in the key's direction.
 
 ## Announcing phases
 For a machine with phases, add a visually hidden `aria-live="polite"` element and write only phase changes to it: `arming`, `chill-down, venting`, `preburners lit`, `main stage`, `shutdown`, `cold`. Never write per-frame numbers to it. For a continuous control, wait until the input has been quiet for about 700 ms before you announce (the ripple tank's `announce`). Leave the live region empty at load and fill it with the current state on `focus`, so a screen reader hears the state when it arrives rather than a stale line. A button whose label changes ("Ignite" to "Shut down") doesn't also need `aria-pressed`.

@@ -1,8 +1,32 @@
 # Changelog
 
-All notable changes to Anatomy are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The skill has no version numbers yet, so entries are dated.
+All notable changes to Schematic are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). The skill has no version numbers yet, so entries are dated. Entries from before 2026-10-11 are Anatomy's history, kept from the upstream repository.
 
 ## [Unreleased]
+
+## 2026-10-11: forked from Anatomy as Schematic
+
+### Added
+
+- The skill is now `schematic` (`name: schematic` in `SKILL.md`, `/schematic`, `$schematic` in Codex). It draws a concept's own structure, exactly, instead of a machine metaphor: a new one idea ("the structure is the explanation"), a workflow step to choose the native form, and craft rules for exact abstraction, scaffolding, numerals on cell faces and flow by tokens.
+- `kit/schema.mjs`: `datum`, `indexRuler`, `cell`, `cellGrid`, `columns`, `plateStack`, `node`, `edge`, `track`, `heightField` and `itemsInOrder`, with `references/schema.md` and `scripts/schema.test.mjs`.
+- `schemaScript()` in `scripts/inline-kit.mjs`, so a page can rebuild cells with the same primitives the build uses.
+- `examples/ga-population/`: a genetic algorithm's population as rows of gene cubes; culled rows sink and children rise each generation, with mutated genes lit.
+- `examples/attention/`: one attention head as Q, Kᵀ, V, softmax score and output grids, with conduits proved by `--audit`.
+- `references/idiom.md`: about twenty concepts mapped to their native forms, each with its mapping sentence.
+- A GA population walkthrough in `references/walkthrough.md`, a scaffolding vocabulary in `references/craft.md`, operations on a structure in `references/motion.md`, and exactness checks in the `references/verify.md` checklist.
+- New evals for attention, a BST insert, a hash table with chaining, gradient descent and a message queue.
+
+### Changed
+
+- README, CONTRIBUTING, SECURITY, the Code of Conduct, the issue forms, the PR template, `agents/openai.yaml` and CI now describe and build Schematic, and point at `ochlodeep/anatomy-schematic`.
+- `dial-indicator`, `raptor-engine`, `test-rig` and `turning-dial` stay as kit references, unchanged. The CSS tokens keep their `--anatomy-*` names.
+
+### Removed
+
+- `examples/desk-computer/`, `examples/arcade-cabinet/`, `examples/ripple-tank/` and `examples/spot-plate/`. Their lessons stay in the references, which point to the upstream Anatomy repository for their source.
+
+## Anatomy history (upstream)
 
 ### Added
 

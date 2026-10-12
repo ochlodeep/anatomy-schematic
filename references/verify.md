@@ -246,19 +246,23 @@ window.requestAnimationFrame = (callback) => raf((now) => {
 **Both paths, and nested.** The dark build should match its baseline, because every light change is gated on `uLight`. Render a dark plate on a light page and a light plate on its own, each with and without WebGL: a `:not([data-theme="dark"])` rule can reach through the page into a dark plate.
 
 ## The review checklist
-**It is an object**
-- [ ] At a glance it reads as one real, well-made thing, and you can name it.
-- [ ] Its mechanism maps to the concept: what moves and what that means can be said in one sentence.
-- [ ] It isn't a stack of abstract plates and isn't one plain slab.
+**It is the structure, exactly**
+- [ ] At a glance it reads as the concept itself, and you can name it.
+- [ ] The mapping sentence holds: what one element is, what its height means and what moves can be said in one sentence.
+- [ ] Count the elements on screen against the model's shape: every row, column, layer, node and edge is there, at its true count.
+- [ ] One height scale per kind of value; structures that share an index share an axis and a pitch, and their rulers' ticks sit under the element centres.
+- [ ] Nothing floats: cells on trays, layers on pillars, grids on the datum, conduits on ports or rims.
+- [ ] The readout and caption match the model's numbers.
+- [ ] It isn't a stack of inexact plates and isn't one plain slab.
 
 **Parts and volume**
-- [ ] 30–60 solids for an inline figure; a hero subject that really has more parts can go far past that (the Raptor has about 270). Every part rests on another and has a job.
+- [ ] 40–120 elements for a Figure, counting scaffolding; a Hero can go far past that (the attention figure has 150 solids, the Raptor about 270). Every part rests on another and has a job.
 - [ ] Sides shaded and tops lighter; bevels on the main slabs; a halo under the base and under lifted parts.
 - [ ] Small details belong to parts: screws at the corners of plates, grooves, rulers, knurls, label plates.
 
 **Lines**
 - [ ] At 4×, every line ends on a face, another line or a terminal dot. Nothing stops in the air.
-- [ ] No leader lines, balloons, dimension arrows or floating labels; at most one engraved label.
+- [ ] No leader lines, balloons, dimension arrows or floating labels; at most one engraved label, plus numerals on cell tops where a value is the subject.
 - [ ] Painter's order is right everywhere: nothing behind shows through, springs and frames are split.
 - [ ] **Audit zero.** With pipes, cables or round parts in the figure, `node build.mjs --audit` ends `audit passed`: zero on every failing line, assembled, apart and in every frame of the replayed explode (opening, closing and reversing). No interlock was hidden with a key bias, and every excused pair (`allow`, `crowd`) has been looked at at 8×.
 - [ ] No pipe or cable passes through another pipe, cable or solid, and every crossing is drawn in depth order: the nearer line on top, crossing on straights, well apart in depth.

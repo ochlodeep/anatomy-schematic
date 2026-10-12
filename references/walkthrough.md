@@ -1,4 +1,35 @@
-# Walkthrough: the test rig (Fig 6)
+# Walkthroughs
+
+Two figures designed step by step: first a native structure from this skill, then Anatomy's test rig, the quality bar for the drawing itself.
+
+# Walkthrough 1: the GA population (`examples/ga-population/`)
+
+A figure for a report on randomized optimisation, explaining what one generation of a genetic algorithm does to its population.
+
+## 1. Truth
+The model is `model.mjs`, copied from the report's own GA: 8 individuals of 6 genes in [0, 1], a target of 6 genes, RMS loss, keep the best 4, breed 4 children by uniform crossover (p = 0.5) from two survivors chosen with replacement, mutate each gene with probability 0.1 by Gaussian noise of 0.12, stop at 40 generations or a loss of 0.02. A seeded generator (`makeRng`) makes every run the same. The readout (generation, best loss, evaluations) and the caption's numbers come from it.
+
+## 2. Native form
+The mapping sentence: *each cube is one gene and its height is the gene's value; each row of six is one individual in its slot; a culled row sinks and a child rises in the same slot; a lit cube is a mutated gene.* The target is the same kind of row, so it gets the same cubes, on a plinth so it reads as the reference. Loss is a scalar that belongs to a row, so it is a pin, not a cube, at the row's end. The history of best loss is a series, so it is `columns` with a socket for every generation still to run.
+
+## 3. Structure list (about 150 elements)
+- Stage: datum plate, 4 feet with collars, groove, 4 corner screws, a gene ruler (6 ticks), a slot ruler (8 ticks), a generation ruler (41 ticks).
+- Holders: 8 row trays with 2 screw dots each, a plinth with 2 dots, a track with 17 ticks and 2 end stops under the loss pins.
+- Structure: 48 gene cubes, 6 target cubes, 8 loss pins, 41 history columns or sockets.
+
+## 4. Camera and layout
+Genes run along x at a pitch of 13, slots along y at a pitch of 16, so the gap between rows (where the trays show) is wider than the gap between genes and each row reads as one record. Gene heights are 2 + 18 × value; a taller scale (26) hid the rows behind each other. Azimuth 42° puts genes running down-right and slots down-left.
+
+## 5. Painter's order
+The datum, rulers, trays, track and plinth are flat and drawn first. Every raised element (gene cubes, target cubes, loss pins, history columns) goes into one list and `itemsInOrder` sorts it by depth. All are boxes or cylinders standing on the same floor in a grid, so a centre-depth sort is exact and no audit is needed.
+
+## 6. Live behaviour
+One step is 3.4 s: hold, sink the culled rows (0.25–0.5), raise the children with their tones (0.55–0.9), grow the newest history column with them. The page holds the model's source (inlined from `model.mjs`) and `cellsOf` from the build (via `toString()`, with `schemaScript()` inlined), and rebuilds the cell group each frame of a transition only. The tour breeds a generation every half second after each step settles, and restarts with the next seed when the run finishes. Enter, Space and → breed, Home restarts, and hovering holds the tour.
+
+## 7. Checks
+`lines.mjs` found 7 track ticks 9 px long ending mid-rail; `track()` now uses the same short ticks as the rulers, and both themes print `line ends: 0`. Captures at 1.2 s caught the sinking rows; the phone capture still reads at 390 px.
+
+# Walkthrough 2: the test rig (Fig 6)
 
 How `examples/test-rig/` was designed. It is a figure for a "Stretch" section explaining how a glass button responds to touch: a press swells it, pulling makes it lean toward the finger (with less give the further you pull), and letting go springs it back past rest once.
 

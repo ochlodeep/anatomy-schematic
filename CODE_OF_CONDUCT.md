@@ -59,10 +59,10 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement by direct message
-to [@wheresryan22](https://x.com/wheresryan22) on X, or, when the report does
-not need to be private, through an issue on the
-[GitHub repository](https://github.com/wheresryan22/anatomy/issues).
+reported to the community leaders responsible for enforcement through GitHub's
+[private reporting](https://github.com/ochlodeep/anatomy-schematic/security/advisories/new)
+for this repository, or, when the report does not need to be private, through an
+issue on the [GitHub repository](https://github.com/ochlodeep/anatomy-schematic/issues).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
